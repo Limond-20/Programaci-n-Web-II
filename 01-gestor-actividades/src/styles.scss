@@ -1,0 +1,22 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+
+// Lm: Todo esto se genero al momento de instalar angular material
+@use '@angular/material' as mat;
+@include mat.core();
+
+// Reseteamos márgenes y damos altura completa
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+// Un fondo limpio y sutilmente académico
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+}

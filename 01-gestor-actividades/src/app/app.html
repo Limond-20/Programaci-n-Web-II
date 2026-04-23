@@ -1,0 +1,114 @@
+<mat-toolbar class="topbar">
+  <div class="topbar__inner">
+    <span class="topbar__title">Gestor de actividades académicas</span>
+  </div>
+</mat-toolbar>
+
+<div class="contenedor">
+  <mat-card class="bloque tarjeta-elevada">
+    <mat-card-header>
+      <mat-card-title>Nueva actividad</mat-card-title>
+      <mat-card-subtitle>(Todos los campos son obligatorios)</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="form-grid-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre de la actividad</mat-label>
+          <input matInput [(ngModel)]="nuevoNombre" placeholder="Ej: Crear Aplicación Web">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Materia</mat-label>
+          <input matInput [(ngModel)]="nuevaMateria" placeholder="Ej: Programación">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de entrega</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="nuevaFecha">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(ngModel)]="nuevaPrioridad">
+            <mat-option value="Alta">Alta</mat-option>
+            <mat-option value="Media">Media</mat-option>
+            <mat-option value="Baja">Baja</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-flat-button class="btn-principal" (click)="agregarActividad()">
+        <mat-icon>add</mat-icon> Registrar actividad
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="bloque tarjeta-elevada">
+    <mat-card-content class="contenido-resumen">
+      <div class="chips-resumen">
+        <mat-chip-set>
+          <mat-chip class="chip-resumen">Total: {{ totalActividades() }}</mat-chip>
+          <mat-chip class="chip-resumen">Pendientes: {{ totalPendientes() }}</mat-chip>
+          <mat-chip class="chip-resumen">Completadas: {{ totalCompletadas() }}</mat-chip>
+        </mat-chip-set>
+      </div>
+
+      <div class="filtros">
+        <button mat-stroked-button class="btn-filtro" (click)="cambiarFiltro('todas')">Todas</button>
+        <button mat-stroked-button class="btn-filtro" (click)="cambiarFiltro('pendientes')">Pendientes</button>
+        <button mat-stroked-button class="btn-filtro" (click)="cambiarFiltro('completadas')">Completadas</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="bloque tarjeta-elevada">
+    <mat-card-header>
+      <mat-card-title>Lista de actividades</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-list>
+        @for (a of actividadesFiltradas(); track a.id) {
+          
+          <mat-list-item class="item-tarea">
+            <mat-checkbox matListItemIcon [checked]="a.estado" (change)="toggleActividad(a.id)"></mat-checkbox>
+
+            <div matListItemTitle [class.tarea-completada]="a.estado">{{ a.nombre }}</div>
+
+            <div matListItemLine class="materia-tarea">
+              Materia: {{ a.materia }} | Entrega: {{ a.fechaEntrega | date:'dd/MM/yyyy' }}
+            </div>
+
+            <div matListItemLine>
+              <mat-chip-set>
+                <mat-chip class="{{ obtenerClasePrioridad(a.prioridad) }}">
+                  Prioridad: {{ a.prioridad }}
+                </mat-chip>
+                @if (a.estado) {
+                  <mat-chip class="chip-estado-ok">Completada</mat-chip>
+                } @else {
+                  <mat-chip class="chip-estado-pendiente">Pendiente</mat-chip>
+                }
+              </mat-chip-set>
+            </div>
+
+            <button mat-icon-button color="warn" matListItemMeta (click)="eliminarActividad(a.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+
+        } @empty {
+          <div class="sin-datos">
+            <p>No hay actividades registradas en este momento.</p>
+          </div>
+        }
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>
